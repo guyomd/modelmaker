@@ -1,10 +1,10 @@
 import numpy as np
-import utm
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 from matplotlib import axes, path
 from matplotlib import pyplot as plt
 
+from modelmaker.utils.projections import lonlat2utm
 
 
 class EarthquakeCatalogue(object):
@@ -126,22 +126,3 @@ class EarthquakeCatalogue(object):
         is_inside = np.array([poly.contains((x, y)) for x, y in zip(self.x, self.y)])
         return is_inside
 
-
-def lonlat2utm(lon, lat):
-    """
-    Convert coordinates expressed in Latitude and Longitude (decimal degrees, WGS84) to
-    UTM coordinates (expressed in meters)
-
-    :param lon: numpy.ndarray, array of longitudes, expressed in decimal degrees
-    :param lat: numpy.ndarray, array of latitudes, expressed in decimal degrees
-    :return: x, y: numpy.ndarray, arrays of Easting and Northing UTM coordinates, in m.
-    """
-    x = list()
-    y = list()
-    zone = list()
-    for long, lati in zip(lat, lon):
-        east, north, num, letter = utm.from_latlon(long, lati)
-        x.append(east)
-        y.append(north)
-        zone.append(str(num)+letter)
-    return np.array(x), np.array(y)
